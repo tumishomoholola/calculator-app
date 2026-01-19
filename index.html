@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tumisho Moholola | Professional Calculator</title>
+<style>
+/* ---------------- BODY & BACKGROUND ---------------- */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Floating background shapes */
+body::before, body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+}
+body::before {
+    width: 400px;
+    height: 400px;
+    background: #2f4f4f;
+    top: -100px;
+    left: -100px;
+}
+body::after {
+    width: 300px;
+    height: 300px;
+    background: #1c2b2b;
+    bottom: -100px;
+    right: -100px;
+}
+
+/* ---------------- TITLE ---------------- */
+h1 {
+    text-align: center;
+    color: #2f4f4f;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    z-index: 2;
+    position: relative;
+}
+
+p.subtitle {
+    text-align: center;
+    color: #555;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+    z-index: 2;
+    position: relative;
+}
+
+/* ---------------- PORTFOLIO CARD ---------------- */
+.projects-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 2;
+    position: relative;
+}
+
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+}
+
+.card h4 {
+    color: #2f4f4f;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.card p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.btn.view-btn {
+    padding: 12px 25px;
+    border: none;
+    background: linear-gradient(145deg, #2f4f4f, #1c2b2b);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn.view-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(145deg, #1c2b2b, #2f4f4f);
+}
+
+/* ---------------- MODAL ---------------- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.4s ease;
+}
+
+.modal-content {
+    background:#f5f5f5;
+    padding:30px;
+    border-radius:20px;
+    width:90%;
+    max-width:450px;
+    position: relative;
+    box-shadow:0 15px 30px rgba(0,0,0,0.25);
+    animation: modalUp 0.4s ease;
+}
+
+/* Close Button */
+.close {
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:2rem;
+    cursor:pointer;
+    color:#333;
+    transition:0.2s;
+}
+.close:hover { color:#1c2b2b; }
+
+/* Mode Switch */
+.mode-switch { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+.mode-btn { padding:10px 15px; border-radius:20px; border:none; cursor:pointer; font-weight:700; background:#2f4f4f; color:#fff; transition:0.2s;}
+.mode-btn:hover { background:#1c2b2b; transform:scale(1.05); }
+
+/* Calculator Display */
+.display {
+    background:#fff;
+    color:#333;
+    font-size:2rem;
+    padding:15px;
+    border-radius:10px;
+    text-align:right;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Buttons */
+.buttons {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+button, .btn, .number-btn, .operator-btn, .function-btn, .equal-btn {
+    padding:15px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.2s;
+    font-weight:700;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Colors */
+.number-btn { background:#e0e0e0; color:#333; }
+.number-btn:hover { background:#a9a9a9; color:#fff; }
+.operator-btn { background:#2f4f4f; color:#fff; }
+.operator-btn:hover { background:#1c2b2b; }
+.function-btn { background:#d3d3d3; color:#333; }
+.function-btn:hover { background:#a9a9a9; color:#fff; }
+.equal-btn { background:#2f4f4f; color:#fff; }
+.equal-btn:hover { background:#1c2b2b; }
+
+/* BMI & Loan Inputs */
+.calc-mode input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+#bmi-result, #loan-result {
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes modalUp { from {transform:translateY(-50px); opacity:0;} to {transform:translateY(0); opacity:1;} }
+</style>
+</head>
+<body>
+
+<h1>Multi-Mode Calculator</h1>
+<p class="subtitle">Standard, BMI & Loan — Professional & Interactive</p>
+
+<section id="projects">
+    <div class="projects-container">
+        <div class="card project-card">
+            <h4>Calculator App</h4>
+            <p>A professional, multi-mode calculator with Standard, BMI, and Loan functions. Accurate and interactive.</p>
+            <button class="btn view-btn" onclick="openCalculator()">Open Calculator</button>
+        </div>
+    </div>
+</section>
+
+<!-- CALCULATOR MODAL -->
+<div id="calculator-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <div class="mode-switch">
+            <button class="mode-btn" data-mode="standard">Standard</button>
+            <button class="mode-btn" data-mode="bmi">BMI</button>
+            <button class="mode-btn" data-mode="loan">Loan</button>
+        </div>
+
+        <div id="calculator-container">
+            <!-- Standard -->
+            <div id="standard" class="calc-mode">
+                <input type="text" id="display" class="display" readonly>
+                <div class="buttons">
+                    <button class="function-btn" data-action="clear">C</button>
+                    <button class="function-btn" data-action="back">←</button>
+                    <button class="function-btn" data-action="percent">%</button>
+                    <button class="operator-btn" data-action="/">÷</button>
+
+                    <button class="number-btn" data-number="7">7</button>
+                    <button class="number-btn" data-number="8">8</button>
+                    <button class="number-btn" data-number="9">9</button>
+                    <button class="operator-btn" data-action="*">×</button>
+
+                    <button class="number-btn" data-number="4">4</button>
+                    <button class="number-btn" data-number="5">5</button>
+                    <button class="number-btn" data-number="6">6</button>
+                    <button class="operator-btn" data-action="-">-</button>
+
+                    <button class="number-btn" data-number="1">1</button>
+                    <button class="number-btn" data-number="2">2</button>
+                    <button class="number-btn" data-number="3">3</button>
+                    <button class="operator-btn" data-action="+">+</button>
+
+                    <button class="number-btn" data-number="0">0</button>
+                    <button class="number-btn" data-number=".">.</button>
+                    <button class="function-btn" data-action="sqrt">√</button>
+                    <button class="equal-btn" data-action="=">=</button>
+                </div>
+            </div>
+
+            <!-- BMI -->
+            <div id="bmi" class="calc-mode" style="display:none;">
+                <input type="number" id="weight" placeholder="Weight (kg)">
+                <input type="number" id="height" placeholder="Height (cm)">
+                <button class="btn" id="bmi-calc">Calculate BMI</button>
+                <p id="bmi-result"></p>
+            </div>
+
+            <!-- Loan -->
+            <div id="loan" class="calc-mode" style="display:none;">
+                <input type="number" id="principal" placeholder="Loan Amount">
+                <input type="number" id="interest" placeholder="Annual Interest %">
+                <input type="number" id="years" placeholder="Term (years)">
+                <button class="btn" id="loan-calc">Calculate Payment</button>
+                <p id="loan-result"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="calculator.js"></script>
+<script>
+function openCalculator() {
+    document.getElementById('calculator-modal').style.display = 'flex';
+}
+document.querySelector('.close').onclick = () => {
+    document.getElementById('calculator-modal').style.display = 'none';
+};
+// Mode switching
+document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('.calc-mode').forEach(m => m.style.display='none');
+        document.getElementById(btn.dataset.mode).style.display='block';
+    };
+});
+</script>
+</body>
+</html>
